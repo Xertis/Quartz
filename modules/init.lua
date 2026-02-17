@@ -1,6 +1,8 @@
-return function(app)
+return function(app, boot_client)
     require "constants"
     require "globals"
+
+    PACK_ENV["boot_client"] = boot_client
 
     ---
     local default_config = {
@@ -34,11 +36,22 @@ return function(app)
     local copy_app = table.copy(app)
     local original_reset = app.reset_content
 
-    app.reset_content = function (packs)
-        if packs == true then return original_reset() end
-        original_reset(table.merge({"client", PACK_ID}, packs))
+    app.reset_content = function(reset_env)
+        if reset_env == true then return original_reset() end
+        original_reset(table.merge({ "client", PACK_ID }, reset_env or {}))
     end
+
     PACK_ENV["app"] = app
+    ---
+    session.reset_entry("quartz-env")
+    local env_meta = {
+        __index = PACK_ENV,
+        __newindex = function(t, key, value)
+            rawset(PACK_ENV, key, value)
+        end
+    }
+
+    setmetatable(session.get_entry("quartz-env"), env_meta)
     ---
 
     api.internal.run(copy_app)

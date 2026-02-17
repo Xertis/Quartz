@@ -1,8 +1,10 @@
+local env = session.get_entry("quartz-env")
+
 local server_list = document.server_list
 local servers_infos = {}
 local handlers = {}
 
-local connections = CLIENT_API.internal.connections
+local connections = env.CLIENT_API.internal.connections
 
 function place_server(panel, server_info, callback)
     server_info.callback = callback
@@ -11,14 +13,13 @@ end
 
 function refresh()
     server_list:clear()
-    for id, server in ipairs(CONFIG.Servers) do
-
+    for id, server in ipairs(env.CONFIG.Servers) do
         place_server(server_list, {
             id = id,
             server_favicon = "gui/not_connected",
             server_name = server.name,
             server_desc = '',
-            server_status = COLORS.gray .. "pending...",
+            server_status = env.COLORS.gray .. "pending...",
             players_online = ""
         })
 
@@ -43,7 +44,7 @@ function handlers.on_status(server, packet)
 
     for id, friend in ipairs(packet.friends_states) do
         if friend == true then
-            table.insert(friends, CONFIG.Account.friends[id])
+            table.insert(friends, env.CONFIG.Account.friends[id])
         end
     end
 
@@ -60,18 +61,19 @@ function handlers.on_status(server, packet)
     }
 
     if table.count_pairs(friends) > 0 then
-        document["serverdata_" .. server.id].color = {139, 0, 255, 32}
+        document["serverdata_" .. server.id].color = { 139, 0, 255, 32 }
     end
 
     document["servericon_" .. server.id].src = server.name .. ".icon"
-    document["playersonline_" .. server.id].text = string.left_pad(string.format("%s / %s", packet.online, packet.max), 10)
+    document["playersonline_" .. server.id].text = string.left_pad(string.format("%s / %s", packet.online, packet.max),
+        10)
     document["serverdesc_" .. server.id].text = packet.short_desc
     document["serverstatus_" .. server.id].text = ''
 end
 
 function handlers.on_disconnect(server, err)
     if err == nil then return end
-    document["serverstatus_" .. server.id].text = COLORS.red .. "offline"
+    document["serverstatus_" .. server.id].text = env.COLORS.red .. "offline"
 end
 
 function get_server_info(id)
@@ -84,8 +86,8 @@ function get_server_info(id)
     document.neutron_version.text = info.neutron_version or "None"
     document.protocol_version.text = info.protocol_version or "None"
 
-    if info.protocol_version ~= PROTOCOL_VERSION then
-        document.protocol_version.color = {255, 0, 0, 255}
+    if info.protocol_version ~= env.PROTOCOL_VERSION then
+        document.protocol_version.color = { 255, 0, 0, 255 }
     end
 
     document.description.text = info.description or "None"
@@ -97,7 +99,7 @@ function get_server_info(id)
 end
 
 function remove_server(id)
-    table.remove(CONFIG.Servers, id)
+    table.remove(env.CONFIG.Servers, id)
     update_config()
 
     document["serverdata_" .. id]:destruct()
@@ -111,7 +113,7 @@ function start_edit(id)
 
     id = tonumber(id)
 
-    local info = CONFIG.Servers[id]
+    local info = env.CONFIG.Servers[id]
     edited_server = id
     document.root:add(gui.template("server_edit", {
         name = info.name,
@@ -124,11 +126,11 @@ function edit_server(data)
     local server_name = data.name
 
     if server_name then
-        CONFIG.Servers[edited_server].name = server_name
+        env.CONFIG.Servers[edited_server].name = server_name
     end
 
     if server_ip then
-        CONFIG.Servers[edited_server].ip = server_ip
+        env.CONFIG.Servers[edited_server].ip = server_ip
     end
 end
 
@@ -140,11 +142,11 @@ function finish_edit()
 end
 
 function edit_server_name(text)
-    edit_server({name = text})
+    edit_server({ name = text })
 end
 
 function edit_server_ip(text)
-    edit_server({ip = text})
+    edit_server({ ip = text })
 end
 
 function connect(id)
@@ -153,7 +155,9 @@ function connect(id)
 
     local server = info.server
 
-    if info.protocol_version ~= PROTOCOL_VERSION then
+    env["SERVER_INFO"] = info
+
+    if info.protocol_version ~= env.PROTOCOL_VERSION then
         gui.alert(gui.str("quartz.different_protocols", "quartz"))
         return
     end
@@ -161,19 +165,14 @@ function connect(id)
     menu.page = "quartz_connection"
     connections.join(
         server.ip, id,
-        CONFIG.Account.name, CONFIG.Account.name,
+        env.CONFIG.Account.name, env.CONFIG.Account.name,
         -- on_connect
-        function ()
+        function()
             print("подключились")
         end,
         -- on_disconnect
-        function ()
-            print("отключились")
-            menu:reset()
-            menu.page = "quartz_connection"
-            local document = Document.new("quartz:pages/quartz_connection")
+        function(reason)
 
-            document.info.text = gui.str("quartz.connection_interrupted")
         end
     )
 
@@ -181,11 +180,10 @@ function connect(id)
 end
 
 function to_config()
-    menu.page="quartz_config"
+    menu.page = "quartz_config"
     events.emit("quartz:config_opened", document)
 end
 
 function main_menu()
-    app.reset_content(true)
-    menu.page="main"
+    menu.page = "main"
 end

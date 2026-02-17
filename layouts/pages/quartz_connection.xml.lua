@@ -1,5 +1,7 @@
 function back()
-    CLIENT:disconnect()
-    menu:reset()
-    menu.page = "servers"
+    time.post_runnable(function()
+        menu:reset()
+        app.reset_content(true)
+        menu.page = "main"
+    end)
 end

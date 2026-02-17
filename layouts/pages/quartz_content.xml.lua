@@ -1,3 +1,5 @@
+local env = session.get_entry("quartz-env")
+
 function on_open()
     refresh()
 end
@@ -20,7 +22,7 @@ local base_packs = {}
 local packs_all = {}
 local required = {}
 
-local packs_api = CLIENT_API.internal.packs
+local packs_api = env.CLIENT_API.internal.packs
 
 local function include(id, is_include)
     if is_include then
@@ -33,16 +35,18 @@ local function include(id, is_include)
 end
 
 function apply()
-    for _, pack in ipairs(add_packs) do
-        packs_api.insert_pack(pack)
-    end
+    time.post_runnable(function()
+        for _, pack in ipairs(add_packs) do
+            packs_api.insert_pack(pack)
+        end
 
-    for _, pack in ipairs(rem_packs) do
-        packs_api.remove_pack(pack)
-    end
+        for _, pack in ipairs(rem_packs) do
+            packs_api.remove_pack(pack)
+        end
 
-    packs_api.reload_packs()
-    menu:back()
+        packs_api.reload_packs(true)
+        menu:back()
+    end)
 end
 
 function reposition_func(_pack)
@@ -58,16 +62,15 @@ function reposition_func(_pack)
     else
         tbl = packs_excluded
         local packinfo = pack.get_info(_pack)
-        packinfo[packinfo.id] = {packinfo.id, packinfo.title}
+        packinfo[packinfo.id] = { packinfo.id, packinfo.title }
         table.insert(packs_excluded, packinfo.id)
     end
 
     local indx = table.index(tbl, _pack) - 1
-    local pos = {0, (SIZE + INTERVAL) * indx + STEP}
+    local pos = { 0, (SIZE + INTERVAL) * indx + STEP }
 
     return pos[1], pos[2]
 end
-
 
 function refresh_search()
     local search_text = document.search_textbox.text:lower()
@@ -105,31 +108,30 @@ function refresh_search()
     end
 end
 
-
 function refresh_changes()
-    document.apply_btn.enabled = (#add_packs>0) or (#rem_packs>0)
+    document.apply_btn.enabled = (#add_packs > 0) or (#rem_packs > 0)
     refresh_search()
 end
 
 function move_pack(id)
     -- cancel pack addition
     if table.has(add_packs, id) then
-        document["pack_"..id]:moveInto(document.packs_add)
+        document["pack_" .. id]:moveInto(document.packs_add)
         table.remove_value(add_packs, id)
         include(id, false)
-    -- cancel pack removal
+        -- cancel pack removal
     elseif table.has(rem_packs, id) then
-        document["pack_"..id]:moveInto(document.packs_cur)
+        document["pack_" .. id]:moveInto(document.packs_cur)
         table.remove_value(rem_packs, id)
         include(id, true)
-    -- add pack
+        -- add pack
     elseif table.has(packs_installed, id) then
-        document["pack_"..id]:moveInto(document.packs_add)
+        document["pack_" .. id]:moveInto(document.packs_add)
         table.insert(rem_packs, id)
         include(id, false)
-    -- remove pack
+        -- remove pack
     else
-        document["pack_"..id]:moveInto(document.packs_cur)
+        document["pack_" .. id]:moveInto(document.packs_cur)
         table.insert(add_packs, id)
         include(id, true)
     end
@@ -143,10 +145,10 @@ function pin(id)
 
     if table.has(CONFIG.Pinned_packs, id) then
         table.remove_value(CONFIG.Pinned_packs, id)
-        document["pin_" .. id].color = {138, 127, 142, 255}
+        document["pin_" .. id].color = { 138, 127, 142, 255 }
     else
         table.insert(CONFIG.Pinned_packs, id)
-        document["pin_" .. id].color = {255, 255, 255, 255}
+        document["pin_" .. id].color = { 255, 255, 255, 255 }
     end
 
     update_config()
@@ -157,20 +159,20 @@ function place_pack(panel, packinfo, callback, position_func)
         callback = nil
     end
     if packinfo.has_indices then
-        packinfo.id_verbose = packinfo.id.."*"
+        packinfo.id_verbose = packinfo.id .. "*"
     else
         packinfo.id_verbose = packinfo.id
     end
     packinfo.callback = callback
-    packinfo.position_func = position_func or function () end
+    packinfo.position_func = position_func or function() end
 
     panel:add(gui.template("quartz_pack", packinfo))
     if not callback or packinfo.has_indices then
-        document["pack_"..packinfo.id].enabled = false
+        document["pack_" .. packinfo.id].enabled = false
     end
 
-    if not table.has(CONFIG.Pinned_packs, packinfo.id) then
-        document["pin_" .. packinfo.id].color = {138, 127, 142, 255}
+    if not table.has(env.CONFIG.Pinned_packs, packinfo.id) then
+        document["pin_" .. packinfo.id].color = { 138, 127, 142, 255 }
     end
 end
 
@@ -178,9 +180,9 @@ function check_dependencies(packinfo)
     if packinfo.dependencies == nil then
         return
     end
-    for i,dep in ipairs(packinfo.dependencies) do
-        local depid = dep:sub(2,-1)
-        if dep:sub(1,1) == '!' then 
+    for i, dep in ipairs(packinfo.dependencies) do
+        local depid = dep:sub(2, -1)
+        if dep:sub(1, 1) == '!' then
             if not table.has(packs_all, depid) then
                 return string.format(
                     "%s (%s)", gui.str("error.dependency-not-found"), depid
@@ -213,10 +215,10 @@ function refresh()
     packs_installed = pack.get_installed()
     packs_available = pack.get_available()
     base_packs = pack.get_base_packs()
-    packs_all = {unpack(packs_installed)}
+    packs_all = { unpack(packs_installed) }
     required = {}
 
-    for _, pack in ipairs({PACK_ID}) do
+    for _, pack in ipairs({ PACK_ID, "client" }) do
         if not table.has(base_packs, pack) then
             table.insert(base_packs, pack)
         end
@@ -229,32 +231,32 @@ function refresh()
     packs_cur:clear()
     packs_add:clear()
 
-    local packids = {unpack(packs_installed)}
-    for i,k in ipairs(packs_available) do
+    local packids = { unpack(packs_installed) }
+    for i, k in ipairs(packs_available) do
         table.insert(packids, k)
     end
     local packinfos = pack.get_info(packids)
 
-    for _,id in ipairs(base_packs) do
+    for _, id in ipairs(base_packs) do
         local packinfo = pack.get_info(id)
-        packs_info[id] = {packinfo.id, packinfo.title}
+        packs_info[id] = { packinfo.id, packinfo.title }
     end
 
-    for _,id in ipairs(packs_all) do
+    for _, id in ipairs(packs_all) do
         local packinfo = pack.get_info(id)
-        packs_info[id] = {packinfo.id, packinfo.title}
+        packs_info[id] = { packinfo.id, packinfo.title }
     end
 
-    for i,id in ipairs(packs_installed) do
+    for i, id in ipairs(packs_installed) do
         if table.has(required, id) then
-            document["pack_"..id].enabled = false
+            document["pack_" .. id].enabled = false
         end
     end
 
     if #packs_excluded == 0 then packs_excluded = table.copy(packs_available) end
     if #packs_included == 0 then packs_included = table.copy(packs_installed) end
 
-    for i,id in ipairs(packs_installed) do
+    for i, id in ipairs(packs_installed) do
         local packinfo = packinfos[id]
         packinfo.index = i
         local callback = not table.has(base_packs, id) and string.format('move_pack("%s")', id) or nil
@@ -262,7 +264,7 @@ function refresh()
         place_pack(packs_cur, packinfo, callback, string.format('reposition_func("%s")', packinfo.id))
     end
 
-    for i,id in ipairs(packs_available) do
+    for i, id in ipairs(packs_available) do
         local packinfo = packinfos[id]
         packinfo.index = i
         local callback = string.format('move_pack("%s")', id)
@@ -276,14 +278,14 @@ function refresh()
 end
 
 function apply_movements(packs_cur, packs_add)
-    for i,id in ipairs(packs_installed) do
+    for i, id in ipairs(packs_installed) do
         if table.has(rem_packs, id) then
-            document["pack_"..id]:moveInto(packs_add)
+            document["pack_" .. id]:moveInto(packs_add)
         end
     end
-    for i,id in ipairs(packs_available) do
+    for i, id in ipairs(packs_available) do
         if table.has(add_packs, id) then
-            document["pack_"..id]:moveInto(packs_cur)
+            document["pack_" .. id]:moveInto(packs_cur)
         end
     end
 end
