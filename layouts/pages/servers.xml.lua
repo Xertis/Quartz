@@ -185,5 +185,10 @@ function to_config()
 end
 
 function main_menu()
-    menu.page = "main"
+    time.post_runnable(function()
+        app.reset_content()
+        app.load_content()
+
+        menu.page = "main"
+    end)
 end
