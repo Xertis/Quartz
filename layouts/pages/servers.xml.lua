@@ -1,4 +1,4 @@
-local env = session.get_entry("quartz-env")
+local env = session.get("quartz-env")
 
 local server_list = document.server_list
 local servers_infos = {}

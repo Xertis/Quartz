@@ -43,7 +43,7 @@ return function(app, boot_client)
 
     PACK_ENV["app"] = app
     ---
-    session.reset_entry("quartz-env")
+    session.reset("quartz-env")
     local env_meta = {
         __index = PACK_ENV,
         __newindex = function(t, key, value)
@@ -51,7 +51,7 @@ return function(app, boot_client)
         end
     }
 
-    setmetatable(session.get_entry("quartz-env"), env_meta)
+    setmetatable(session.get("quartz-env"), env_meta)
     ---
 
     api.internal.run(copy_app)

@@ -1,4 +1,4 @@
-local env = session.get_entry("quartz-env")
+local env = session.get("quartz-env")
 
 function on_open()
     refresh()
