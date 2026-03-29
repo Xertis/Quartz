@@ -1,7 +1,10 @@
 {
-    "id": "quartz",
-    "title": "Quartz",
-    "version": "0.1.0",
-    "description": "Оболочка для клиента Neutron",
-    "creators": ["Xertis", "Onran"]
+  "id": "quartz",
+  "title": "Quartz",
+  "version": "0.1.1",
+  "description": "Оболочка для клиента Neutron",
+  "creators": [
+    "Xertis",
+    "Onran"
+  ]
 }
