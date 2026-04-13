@@ -26,7 +26,8 @@ function refresh()
         connections.get_status(
             server.ip, id, server.name,
             handlers.on_status,
-            handlers.on_disconnect
+            handlers.on_disconnect,
+            env.CONFIG.Account.friends
         )
     end
     -- TODO: Реализовать API
@@ -168,7 +169,6 @@ function connect(id)
         env.CONFIG.Account.name, env.CONFIG.Account.name,
         -- on_connect
         function()
-            print("подключились")
         end,
         -- on_disconnect
         function(reason)
