@@ -39,6 +39,7 @@ function module.handlers.game.on_disconnect(server, packet)
             app.close_world()
         end
 
+        app.reset_content()
         app.config_packs({ PACK_ID, "client" })
         app.load_content()
 
