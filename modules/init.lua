@@ -21,6 +21,11 @@ return function(app, boot_client)
     end
 
     CONFIG = table.merge(json.parse(file.read(CONFIG_PATH)), default_config)
+    if PERSISTENT_ENV.name then
+        CONFIG.Account.name = PERSISTENT_ENV.name
+    else
+        PERSISTENT_ENV.name = CONFIG.Account.name
+    end
 
     SHELL_CONFIG = json.parse(file.read(SHELL_CONFIG_PATH))
 
