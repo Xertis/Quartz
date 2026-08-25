@@ -17,12 +17,14 @@ function add_server()
         return
     end
 
-    table.insert(CONFIG.Servers, {name = server_name, ip = server_ip})
+    table.insert(CONFIG.Servers, { name = server_name, ip = server_ip })
 end
 
 function finish()
     CONFIG.Account.name = name
+    PERSISTENT_ENV.name = name
 
     update_config()
     menu:back()
 end
+
