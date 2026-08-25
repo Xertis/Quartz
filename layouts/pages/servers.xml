@@ -58,7 +58,12 @@
 
     <image size="5,580" src='gui/line' gravity="center-center" />
 
-    <button pos='83,525' size='392,40' onclick='main_menu()'>@Back</button>
+    <button
+        gravity="bottom-left"
+        margin="15,0,15,15"
+        size='392,40'
+        onclick='main_menu()'
+    >@Back</button>
     <button
         gravity="bottom-right"
         margin="0,0,15,15"
@@ -73,7 +78,7 @@
         size='36'
         color='#FFFFFF50'
         hover-color='#FFFFFF10'
-        pos='8,527'
+        pos='412,527'
     />
     <image
         id="refresh"
@@ -83,7 +88,7 @@
         size='36'
         color='#FFFFFF50'
         hover-color='#FFFFFF10'
-        pos='44,527'
+        pos='448,527'
     />
 
 </container>
