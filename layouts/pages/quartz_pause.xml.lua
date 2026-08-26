@@ -100,7 +100,7 @@ function leave()
             if world.is_open() then
                 app.close_world()
             end
-            app.reset_content(true)
+            app.reset_content()
             app.load_content()
         end)
     end)

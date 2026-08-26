@@ -1,5 +1,5 @@
 local module = {
-    states = {},
+    players = {},
     handlers = {
         game = {}
     }
@@ -18,11 +18,11 @@ function module.init()
     menu.page = "servers"
 end
 
-function module.states.get_identity()
+function module.players.get_main_identity()
     return CONFIG.Account.name
 end
 
-function module.states.get_username()
+function module.players.get_main_username()
     return CONFIG.Account.name
 end
 
@@ -39,7 +39,7 @@ function module.handlers.game.on_disconnect(server, packet)
             app.close_world()
         end
 
-        app.reset_content()
+        app.reset_content({ PACK_ID, "client" })
         app.config_packs({ PACK_ID, "client" })
         app.load_content()
 

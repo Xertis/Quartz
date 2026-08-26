@@ -14,3 +14,4 @@ quartz.engine_version=Версия движка
 quartz.protocol_version=Версия протокола
 quartz.different_protocols=У клиента и у сервера разные версии протоколов, подключение невозможно
 quartz.connection_interrupted=Соединение разорвано
+world.port=Порт

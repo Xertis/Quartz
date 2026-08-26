@@ -3,7 +3,7 @@ local function boot_client()
     app.config_packs({ "client", "quartz" })
     app.load_content()
 
-    require "quartz:run/remote" (app, boot_client)
+    require "quartz:run/single" (app, boot_client)
 end
 
 boot_client()

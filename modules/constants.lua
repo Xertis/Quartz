@@ -3,7 +3,6 @@ SHELL_CONFIG = {}
 
 PACK_ID = "quartz"
 CONFIG_PATH = pack.shared_file(PACK_ID, "config.json")
-SHELL_CONFIG_PATH = "quartz:resources/shell_config.json"
 
 PROTOCOL_VERSION = 0
 API_VERSION = 0
