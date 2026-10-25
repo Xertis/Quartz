@@ -1,4 +1,5 @@
-local instances = require "instances_manager"
+local env = session.get("quartz-env")
+local connections = env.CLIENT_API.internal.connections
 
 function on_open()
     local worlds = world.get_list()
@@ -19,5 +20,11 @@ function on_open()
 end
 
 function open_world(name)
-    instances.open_world(name)
+    local config = json.parse(file.read("quartz:resources/server_config.json"))
+    config.game.main_world = name
+
+    connections.run_single(config, "main", env.CONFIG.Account.name, env.CONFIG.Account.name, function ()
+        print("кайф, подключились")
+    end)
+    menu.page = "quartz_connection"
 end

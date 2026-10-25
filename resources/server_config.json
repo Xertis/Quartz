@@ -1,0 +1,57 @@
+{
+  "game": {
+    "content_packs": ["base"],
+    "plugins": [],
+    "worlds": {
+      "overworld": {
+        "seed": "86935665463",
+        "generator": "base:demo",
+        "rules": {
+          "cheat-commands": true
+        }
+      }
+    },
+    "main_world": "overworld"
+  },
+  "server": {
+    "version": "0.32.0",
+    "max_players": 16,
+    "short_description": "MasterServer",
+    "description": "",
+    "port": 22003,
+    "http_enabled": true,
+    "auto_save_interval": 5,
+    "chunks_loading_distance": 4,
+    "chunks_loading_speed": 4,
+    "password_auth": false,
+    "last_session_lifetime": 30,
+    "dev_mode": false,
+    "shallow_dev_mode": true,
+    "shutdown_timeout": -1,
+    "kick_threshold_timeout": 30,
+    "whitelist": [],
+    "whitelist_ip": [],
+    "blacklist": []
+  },
+  "roles": {
+    "default_role": "member",
+    "member": {
+      "priority": 1,
+      "rules": {
+        "allow-content-access": true,
+        "allow-flight": true,
+        "allow-noclip": true,
+        "allow-attack": true,
+        "allow-destroy": true,
+        "allow-cheat-movement": true,
+        "allow-debug-cheats": true,
+        "allow-fast-interaction": true
+      },
+
+      "permissions": {
+        "role_management": true,
+        "time_management": true
+      }
+    }
+  }
+}

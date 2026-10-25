@@ -53,7 +53,7 @@ local function sync_players()
 
     document.pid.text = "PID: " .. env.CLIENT_PLAYER.pid
     document.ping.text = "Ping: " .. math.round(wait_time * 1000) .. "ms"
-    document.online.text = string.format("Online: %s/%s", players_online + 1, env.SERVER_INFO.max)
+    document.online.text = string.format("Online: %s", players_online + 1)
 
     if not player_list or players_online == 0 then
         document.sad.visible = true

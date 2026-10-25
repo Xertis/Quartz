@@ -42,7 +42,6 @@ return function(app, boot_client)
     PROTOCOL_VERSION = constants.protocol_version
     API_VERSION = constants.api_version
     ---
-    session.reset("quartz-env")
     local env_meta = {
         __index = PACK_ENV,
         __newindex = function(t, key, value)

@@ -15,7 +15,7 @@ function module.init()
     packs.reload_packs(true)
 
     packs.init_scripts()
-    menu.page = "servers"
+    menu.page = session.get("quartz-env")["main_page"] or "servers"
 end
 
 function module.players.get_main_identity()
