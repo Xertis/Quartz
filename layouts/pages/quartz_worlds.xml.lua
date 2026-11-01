@@ -22,6 +22,7 @@ end
 function open_world(name)
     local config = json.parse(file.read("quartz:resources/server_config.json"))
     config.game.main_world = name
+    config.game.worlds[name] = config.game.worlds.overworld
 
     connections.run_single(config, "main", env.CONFIG.Account.name, env.CONFIG.Account.name, function ()
         print("кайф, подключились")
