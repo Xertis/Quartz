@@ -49,7 +49,9 @@ function module.handlers.game.on_disconnect(server, packet)
         local document_env = gui.get_env(document_name)
 
         document.info.text = reason
-        document_env.on_disconnect(server, json.parse(packet.download_content))
+        if packet.download_content then
+            document_env.on_disconnect(server, json.parse(packet.download_content))
+        end
     end)
 end
 
