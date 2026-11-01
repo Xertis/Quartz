@@ -1,0 +1,5 @@
+<button gravity="bottom-center" 
+    size="350,40"
+    onclick="reconnect()">
+    @Reconnect
+</button>

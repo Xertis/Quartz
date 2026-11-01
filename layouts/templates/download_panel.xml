@@ -1,0 +1,12 @@
+<container size="350,40">
+    <container size="310, 40" color="#000000bf">
+        <label id="download_string" gravity="top-left" margin="5, 5, 0, 0">@Downloading...</label>
+        <label id="speed" text-align="right" gravity="top-right" margin="0, 5, 5, 0"></label>
+        <container id="progress_bg" size="300, 5" gravity="bottom-left" margin="5, 0, 0, 10" color="#303030ff">
+            <container id="progress" size="0, 5" color="#777777ff"></container>
+        </container>
+    </container>
+    <button gravity="center-right" padding="5, 5, 5, 5" onclick="cancel_download()">
+        <image size="30, 30" src="gui/cross"></image>
+    </button>
+</container>

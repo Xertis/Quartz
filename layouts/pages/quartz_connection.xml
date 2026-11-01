@@ -1,4 +1,4 @@
-<container size="600,300" context='menu'>
+<panel size="350,300" color="#00000000" context='menu'>
     <textbox
         gravity="top-center"
         size="350,250"
@@ -6,9 +6,10 @@
         multiline="true"
         editable="false"
     >@Connecting</textbox>
+    <panel size="600, 0" color="#00000000" id="download_panel"></panel>
     <button
         gravity="bottom-center"
         size="350,40"
         onclick='back()'
     >@Back</button>
-</container>
+</panel>
