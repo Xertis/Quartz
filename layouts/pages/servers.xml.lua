@@ -66,10 +66,9 @@ function handlers.on_status(server, packet)
     end
 
     document["servericon_" .. server.id].src = server.name .. ".icon"
-    document["playersonline_" .. server.id].text = string.left_pad(string.format("%s / %s", packet.online, packet.max),
-        10)
+    document["playersonline_" .. server.id].text = string.format("%s / %s", packet.online, packet.max)
     document["serverdesc_" .. server.id].text = packet.short_desc
-    document["serverstatus_" .. server.id].text = ''
+    document["serverstatus_" .. server.id].text = env.COLORS.green .. 'online'
 end
 
 function handlers.on_disconnect(server, err)

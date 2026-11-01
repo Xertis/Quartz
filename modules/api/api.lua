@@ -44,9 +44,12 @@ function module.handlers.game.on_disconnect(server, packet)
         app.load_content()
 
         menu.page = "quartz_connection"
-        local document = Document.new("quartz:pages/quartz_connection")
+        local document_name = "quartz:pages/quartz_connection"
+        local document = Document.new(document_name)
+        local document_env = gui.get_env(document_name)
 
         document.info.text = reason
+        document_env.on_disconnect(server, json.parse(packet.download_content))
     end)
 end
 

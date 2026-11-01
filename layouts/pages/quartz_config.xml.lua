@@ -1,4 +1,5 @@
 local name = nil
+local env = session.get("quartz-env")
 
 function on_open()
     name = CONFIG.Account.name
@@ -28,3 +29,10 @@ function finish()
     menu:back()
 end
 
+function open_cache_folder()
+    local packs_cache_path = env.CLIENT_API.internal.packs.get_cache_path()
+    if (file.isdir(packs_cache_path) == false) then
+        file.mkdirs(packs_cache_path)
+    end
+    app.open_folder(packs_cache_path)
+end

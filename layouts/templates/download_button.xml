@@ -1,0 +1,5 @@
+<button gravity="bottom-center" 
+    size="350,40"
+    onclick="request_content('%{server_ip}', '%{server_name}')">
+    @Download content (%{size})
+</button>
